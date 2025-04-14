@@ -1,0 +1,136 @@
+descending
+```
+START: LXI H C000h
+MVI D 00h
+MVI C 09h
+L2: MOV A M
+INX H
+CMP M
+JNC L1
+MOV B M
+MOV M A
+DCX H
+MOV M B
+INX H
+MVI D 01h
+L1: DCR C
+JNZ L2
+MOV A D
+RRC
+JC START
+HLT
+
+```
+
+multiplication in bcd
+```
+LXI H C000h
+MOV A M
+MOV E M
+MVI B 0Ah
+INX H
+LOOP: MOV M A
+ADD E
+DAA
+INX H
+DCR B
+JNZ LOOP
+HLT
+```
+
+16bit divided by 8 bit
+```
+LXI H C000h
+MOV A M
+INX H
+MOV B M
+INX H
+MOV C M
+INR B
+LXI H 0000h
+LOOP: SUB C
+JC SKIP
+INCR: INX H
+JMP LOOP
+SKIP: DCR B
+JZ STORE
+JMP INCR
+STORE: ADD C
+XCHG
+LXI H D000h
+MOV M E
+INX H
+MOV M D
+INX H
+MOV M A
+HLT
+```
+
+
+odd parity same even parity change
+```
+LXI H 9250h
+LXI D A200h
+MVI B 05h
+CHECK: MOV A M
+CPI 51h
+JZ STOP
+ORA A
+JPO TRANSFER
+ANI DFh
+ORI 08h
+TRANSFER: STAX D
+INX H
+INX D
+JMP CHECK
+HLT
+
+```
+
+
+bitmanipulation as designated
+```
+LXI H 9080h
+LXI D 9090h
+MVI B 0Ah
+LOOP: MOV A M
+ANI A0h
+CPI 20h
+JZ NEXT
+MOV A M
+XRI 44h
+JMP SKIP
+NEXT: MOV A M
+SKIP: STAX D
+INX D
+INX H
+DCR B
+JNZ LOOP
+HLT
+
+```
+
+
+oddsumevensum
+```
+LXI H 1050h
+MVI D 00h
+MVI E 00h
+MVI B 14h
+L1: MOV A M
+ANI 01h
+JZ EVEN
+MOV A M
+ADD D
+MOV D A
+JMP SKIP
+EVEN: MOV A M
+ADD E
+MOV E A
+SKIP: INX H
+DCR B
+JNZ L1
+HLT
+
+```
+
